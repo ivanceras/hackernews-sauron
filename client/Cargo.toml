@@ -1,0 +1,34 @@
+[package]
+name = "client"
+version = "0.1.0"
+authors = ["Jovansonlee Cesar<ivanceras@gmail.com>]
+edition = "2018"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+wasm-bindgen = { version = "0.2.29", optional = true}
+wasm-bindgen-futures = { version = "0.4.1", optional = true }
+sauron = "0.40"
+console_error_panic_hook = { version = "0.1", optional = true}
+log = "0.4"
+console_log = {version ="0.2", features = ["color"], optional = true}
+serde = { version = "1.0", features = ["serde_derive"]}
+chrono = { version = "0.4.19", features = ["serde", "wasmbind"] } 
+derive_more = "0.99.16"
+common = { path = "../common" }
+
+[features]
+default = ["wasm"]
+wasm = ["wasm-bindgen", "wasm-bindgen-futures", "console_error_panic_hook", "console_log"]
+
+
+[profile.release]
+# optimize for binary size
+#opt-level = "s"
+# optimize for binary size, but also turn off loop vectorization.
+opt-level = "z"
+lto = true
+panic = "abort"

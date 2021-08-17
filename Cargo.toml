@@ -1,0 +1,10 @@
+[workspace]
+
+members = [
+    "server",
+    "client"
+]
+
+
+[patch.crates-io]
+#mt-dom = { git = "https://github.com/ivanceras/mt-dom.git", branch = "master" }
