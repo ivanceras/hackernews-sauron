@@ -1,4 +1,4 @@
-# Hackernew Clone
+# Hackernews sauron
 
 A hacker news clone in ~1k lines of rust.
 This is using [sauron](https://github.com/ivanceras/sauron) web-framework.
