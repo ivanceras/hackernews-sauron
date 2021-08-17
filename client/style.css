@@ -478,8 +478,9 @@ main.content, footer, #loader{
 }
 
 .comment-item{
-    border-left: 1px solid #CCCCCC;
+    border-left: 1px dotted #CCCCCC;
     padding-left: 10px;
+    margin: 5px 5px;
 }
 
 li.comment-item{

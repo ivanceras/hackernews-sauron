@@ -255,6 +255,13 @@ impl Component<Msg> for App {
                         }>
                             "new"
                         </a>
+                        <a relative href="/show"
+                            on_click=|e|{
+                            e.prevent_default();
+                            Msg::FetchStoriesSorted(StorySorting::Show)
+                        }>
+                            "show"
+                        </a>
                    </nav>
                    <nav class="right-nav">
                         <a href="https://github.com/ivanceras/hackernews-sauron">

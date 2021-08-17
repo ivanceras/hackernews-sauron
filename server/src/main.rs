@@ -42,6 +42,7 @@ async fn main() {
     let top = stories_path(StorySorting::Top);
     let best = stories_path(StorySorting::Best);
     let new = stories_path(StorySorting::New);
+    let show = stories_path(StorySorting::Show);
 
     let api_stories_path = |sorting: StorySorting| {
         warp::path(sorting.to_str().to_owned()).and_then(move || json_stories(sorting))
@@ -56,6 +57,7 @@ async fn main() {
     let api_top_stories = api_stories_path(StorySorting::Top);
     let api_best_stories = api_stories_path(StorySorting::Best);
     let api_new_stories = api_stories_path(StorySorting::New);
+    let api_show_stories = api_stories_path(StorySorting::Show);
 
     // We serve the data from hn-firebase already assembled.
     // (Though this is not needed in our client here)
@@ -64,6 +66,7 @@ async fn main() {
     //       /top
     //       /best
     //       /new
+    //       /show
     //       /comment
     //       /user
     let api = warp::path("api").and(
@@ -71,6 +74,7 @@ async fn main() {
             .or(api_top_stories)
             .or(api_best_stories)
             .or(api_new_stories)
+            .or(api_show_stories)
             .or(api_comment_permalink)
             .or(api_user_page)
     );
@@ -80,6 +84,7 @@ async fn main() {
     //      /top
     //      /best
     //      /new
+    //      /show
     //      /item
     //      /user
     //      /comment
@@ -93,6 +98,7 @@ async fn main() {
         home.or(top)
             .or(best)
             .or(new)
+            .or(show)
             .or(story_item)
             .or(user)
             .or(comment)
@@ -104,6 +110,7 @@ async fn main() {
     //      /top
     //      /best
     //      /new
+    //      /show
     //      /item
     //      /user
     //      /api

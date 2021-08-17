@@ -6,16 +6,23 @@ pub enum StorySorting {
     Top,
     New,
     Best,
+    Show,
 }
 
 const TOP: &'static str = "top";
 const BEST: &'static str = "best";
 const NEW: &'static str = "new";
+const SHOW: &'static str = "show";
 
 impl StorySorting {
     /// return all of the story sorting possible
     fn all() -> Vec<Self> {
-        vec![StorySorting::Top, StorySorting::Best, StorySorting::New]
+        vec![
+            StorySorting::Top,
+            StorySorting::Best,
+            StorySorting::New,
+            StorySorting::Show,
+        ]
     }
     /// match url to StorySorting
     pub fn from_url(url: &str) -> Option<Self> {
@@ -27,6 +34,7 @@ impl StorySorting {
             StorySorting::Top => TOP,
             StorySorting::Best => BEST,
             StorySorting::New => NEW,
+            StorySorting::Show => SHOW,
         }
     }
 
