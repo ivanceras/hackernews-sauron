@@ -193,7 +193,7 @@ impl App {
 impl Application<Msg> for App {
 
     #[cfg(feature = "wasm")]
-    fn init(&self) -> Cmd<Self, Msg> {
+    fn init(&mut self, _: Program<Self, Msg>) -> Cmd<Self, Msg> {
         let mut commands = vec![];
         let listen_to_url_changes = Window::add_event_listeners(vec![on_popstate(|_e| {
             log::trace!("pop_state is triggered in sauron add event listener");
