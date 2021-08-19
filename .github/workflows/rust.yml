@@ -23,5 +23,7 @@ jobs:
       run: cargo test --all
 
     - name: Build client
-    - run: ./build.sh
-    - run: cargo build --release --bin server
+      run: ./build.sh
+
+    - name: Build server
+      run: cargo build --release --bin server
