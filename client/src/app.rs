@@ -190,7 +190,7 @@ impl App {
     }
 }
 
-impl Component<Msg> for App {
+impl Application<Msg> for App {
 
     #[cfg(feature = "wasm")]
     fn init(&self) -> Cmd<Self, Msg> {
