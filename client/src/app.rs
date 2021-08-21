@@ -51,149 +51,10 @@ impl Default for App {
     }
 }
 
-impl App {
-    pub fn with_stories(stories: Vec<StoryItem>) -> Self {
-        Self {
-            content: FetchStatus::Complete(Content::from(stories)),
-            is_loading: false,
-        }
-    }
-    pub fn with_story(story_page: StoryPageData) -> Self {
-        Self {
-            content: FetchStatus::Complete(Content::from(story_page)),
-            is_loading: false,
-        }
-    }
-    pub fn with_user_page(user_data: UserData) -> Self {
-        Self {
-            content: FetchStatus::Complete(Content::from(user_data)),
-            is_loading: false,
-        }
-    }
-
-    pub fn with_comment_permalink(comment: Comment) -> Self {
-        Self {
-            content: FetchStatus::Complete(Content::from(comment)),
-            is_loading: false,
-        }
-    }
-
-    #[cfg(feature = "wasm")]
-    fn fetch_stories(&self) -> Cmd<Self, Msg> {
-        Cmd::new(move|program| {
-            let async_fetch = |program:Program<Self,Msg>| async move{
-                match api::get_stories().await {
-                    Ok(stories) => {
-                        program.dispatch(Msg::ReceivedContent( Content::from(
-                            stories,
-                        )));
-                    }
-                    Err(e) => {
-                        program.dispatch(Msg::RequestError(e));
-                    }
-                }
-            };
-           spawn_local(async_fetch(program))
-        })
-    }
-
-    #[cfg(feature = "wasm")]
-    fn fetch_stories_with_sorting(
-        &self,
-        sorting: StorySorting,
-    ) -> Cmd<Self, Msg> {
-        Cmd::new(move|program| {
-            let async_fetch = |program:Program<Self,Msg>| async move{
-                match api::get_stories_with_sorting(sorting).await {
-                    Ok(stories) => {
-                        program.dispatch(Msg::ReceivedContent( Content::from(
-                            stories,
-                        )));
-                    }
-                    Err(e) => {
-                        program.dispatch(Msg::RequestError(e));
-                    }
-                }
-            };
-           spawn_local(async_fetch(program))
-        })
-    }
-
-
-    #[cfg(feature = "wasm")]
-    fn fetch_story_page(&self, story_id: i64) -> Cmd<Self, Msg> {
-        Cmd::new(move|program| {
-            let async_fetch = |program:Program<Self,Msg>| async move{
-                match api::get_story(story_id).await {
-                    Ok(story) => {
-                        program.dispatch(Msg::ReceivedContent( Content::from(
-                            story,
-                        )));
-                    }
-                    Err(e) => {
-                        program.dispatch(Msg::RequestError(e));
-                    }
-                }
-            };
-           spawn_local(async_fetch(program))
-        })
-    }
-
-
-    #[cfg(feature = "wasm")]
-    fn fetch_comment_permalink(&self, comment_id: i64) -> Cmd<Self, Msg> {
-        Cmd::new(move|program| {
-            let async_fetch = |program:Program<Self,Msg>| async move{
-                match api::get_comment(comment_id).await {
-                    Ok(comment) => {
-                        program.dispatch(Msg::ReceivedContent( Content::from(
-                            comment,
-                        )));
-                    }
-                    Err(e) => {
-                        program.dispatch(Msg::RequestError(e));
-                    }
-                }
-            };
-           spawn_local(async_fetch(program))
-        })
-    }
-
-
-    #[cfg(feature = "wasm")]
-    fn fetch_user_page(&self, username: String) -> Cmd<Self, Msg> {
-        Cmd::new(move|program| {
-            let username = username.clone();
-            let async_fetch = move|program:Program<Self,Msg>| async move{
-                match api::get_user_page(&username).await {
-                    Ok(user_page) => {
-                        program.dispatch(Msg::ReceivedContent( Content::from(
-                            user_page,
-                        )));
-                    }
-                    Err(e) => {
-                        program.dispatch(Msg::RequestError(e));
-                    }
-                }
-            };
-           spawn_local(async_fetch(program))
-        })
-    }
-
-    #[cfg(feature = "wasm")]
-    fn push_state_url(url: &str) {
-        let history = sauron::window().history().expect("must have history");
-        log::trace!("pushing to state: {}", url);
-        history
-            .push_state_with_url(&JsValue::from_str(url), "", Some(url))
-            .expect("must push state");
-    }
-}
-
 impl Application<Msg> for App {
 
     #[cfg(feature = "wasm")]
-    fn init(&mut self, _: Program<Self, Msg>) -> Cmd<Self, Msg> {
+    fn init(&mut self) -> Cmd<Self, Msg> {
         let mut commands = vec![];
         let listen_to_url_changes = Window::add_event_listeners(vec![on_popstate(|_e| {
             log::trace!("pop_state is triggered in sauron add event listener");
@@ -396,3 +257,144 @@ impl App {
         }
     }
 }
+
+impl App {
+    pub fn with_stories(stories: Vec<StoryItem>) -> Self {
+        Self {
+            content: FetchStatus::Complete(Content::from(stories)),
+            is_loading: false,
+        }
+    }
+    pub fn with_story(story_page: StoryPageData) -> Self {
+        Self {
+            content: FetchStatus::Complete(Content::from(story_page)),
+            is_loading: false,
+        }
+    }
+    pub fn with_user_page(user_data: UserData) -> Self {
+        Self {
+            content: FetchStatus::Complete(Content::from(user_data)),
+            is_loading: false,
+        }
+    }
+
+    pub fn with_comment_permalink(comment: Comment) -> Self {
+        Self {
+            content: FetchStatus::Complete(Content::from(comment)),
+            is_loading: false,
+        }
+    }
+
+    #[cfg(feature = "wasm")]
+    fn fetch_stories(&self) -> Cmd<Self, Msg> {
+        Cmd::new(move|program| {
+            let async_fetch = |program:Program<Self,Msg>| async move{
+                match api::get_stories().await {
+                    Ok(stories) => {
+                        program.dispatch(Msg::ReceivedContent( Content::from(
+                            stories,
+                        )));
+                    }
+                    Err(e) => {
+                        program.dispatch(Msg::RequestError(e));
+                    }
+                }
+            };
+           spawn_local(async_fetch(program))
+        })
+    }
+
+    #[cfg(feature = "wasm")]
+    fn fetch_stories_with_sorting(
+        &self,
+        sorting: StorySorting,
+    ) -> Cmd<Self, Msg> {
+        Cmd::new(move|program| {
+            let async_fetch = |program:Program<Self,Msg>| async move{
+                match api::get_stories_with_sorting(sorting).await {
+                    Ok(stories) => {
+                        program.dispatch(Msg::ReceivedContent( Content::from(
+                            stories,
+                        )));
+                    }
+                    Err(e) => {
+                        program.dispatch(Msg::RequestError(e));
+                    }
+                }
+            };
+           spawn_local(async_fetch(program))
+        })
+    }
+
+
+    #[cfg(feature = "wasm")]
+    fn fetch_story_page(&self, story_id: i64) -> Cmd<Self, Msg> {
+        Cmd::new(move|program| {
+            let async_fetch = |program:Program<Self,Msg>| async move{
+                match api::get_story(story_id).await {
+                    Ok(story) => {
+                        program.dispatch(Msg::ReceivedContent( Content::from(
+                            story,
+                        )));
+                    }
+                    Err(e) => {
+                        program.dispatch(Msg::RequestError(e));
+                    }
+                }
+            };
+           spawn_local(async_fetch(program))
+        })
+    }
+
+
+    #[cfg(feature = "wasm")]
+    fn fetch_comment_permalink(&self, comment_id: i64) -> Cmd<Self, Msg> {
+        Cmd::new(move|program| {
+            let async_fetch = |program:Program<Self,Msg>| async move{
+                match api::get_comment(comment_id).await {
+                    Ok(comment) => {
+                        program.dispatch(Msg::ReceivedContent( Content::from(
+                            comment,
+                        )));
+                    }
+                    Err(e) => {
+                        program.dispatch(Msg::RequestError(e));
+                    }
+                }
+            };
+           spawn_local(async_fetch(program))
+        })
+    }
+
+
+    #[cfg(feature = "wasm")]
+    fn fetch_user_page(&self, username: String) -> Cmd<Self, Msg> {
+        Cmd::new(move|program| {
+            let username = username.clone();
+            let async_fetch = move|program:Program<Self,Msg>| async move{
+                match api::get_user_page(&username).await {
+                    Ok(user_page) => {
+                        program.dispatch(Msg::ReceivedContent( Content::from(
+                            user_page,
+                        )));
+                    }
+                    Err(e) => {
+                        program.dispatch(Msg::RequestError(e));
+                    }
+                }
+            };
+           spawn_local(async_fetch(program))
+        })
+    }
+
+    #[cfg(feature = "wasm")]
+    fn push_state_url(url: &str) {
+        let history = sauron::window().history().expect("must have history");
+        log::trace!("pushing to state: {}", url);
+        history
+            .push_state_with_url(&JsValue::from_str(url), "", Some(url))
+            .expect("must push state");
+    }
+}
+
+
