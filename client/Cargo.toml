@@ -11,7 +11,7 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 wasm-bindgen = { version = "0.2.29", optional = true}
 wasm-bindgen-futures = { version = "0.4.1", optional = true }
-sauron = "0.42"
+sauron = "0.43"
 console_error_panic_hook = { version = "0.1", optional = true}
 log = "0.4"
 console_log = {version ="0.2", features = ["color"], optional = true}
@@ -30,6 +30,6 @@ wasm = ["wasm-bindgen", "wasm-bindgen-futures", "console_error_panic_hook", "con
 # optimize for binary size
 #opt-level = "s"
 # optimize for binary size, but also turn off loop vectorization.
-opt-level = "z"
-lto = true
-panic = "abort"
+#opt-level = "z"
+#lto = true
+#panic = "abort"

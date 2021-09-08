@@ -54,11 +54,11 @@ impl Content {
 
     fn view_story_preview_list(&self, stories: &[StoryItem]) -> Node<app::Msg> {
         node! {
-            <ol>
+            <ol key="story-preview">
             {
                 for (i, story_preview) in stories.iter().enumerate() {
                     node! {
-                        <li key=story_preview.id>
+                        <li /*key=story_preview.id*/>
                             <div class="item-number">{text!("{}. ",i+1)}</div>
                             {self.view_story_preview(story_preview)}
                         </li>
@@ -79,7 +79,7 @@ impl Content {
         let story_preview_id = story_preview.id;
         let story_preview_by = story_preview.by.clone();
         node! {
-            <div key=story_preview_id class="story-preview">
+            <div /*key=story_preview_id*/ class="story-preview">
                 <div class="buttons">
                     <a>{safe_html("&#9650;")}</a>
                     <a>{safe_html("&#9660;")}</a>
@@ -123,7 +123,7 @@ impl Content {
         node! {
             <div key=story_page.id>
                 { self.view_story_preview(&story_page.preview()) }
-                <ul class="comment-component">
+                <ul class="comment-component" key="story-comments">
                 {
                     for comment in &story_page.comments{
                         self.view_comment(comment)
