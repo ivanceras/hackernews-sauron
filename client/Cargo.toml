@@ -26,10 +26,3 @@ default = ["wasm"]
 wasm = ["wasm-bindgen", "wasm-bindgen-futures", "console_error_panic_hook", "console_log"]
 
 
-[profile.release]
-# optimize for binary size
-#opt-level = "s"
-# optimize for binary size, but also turn off loop vectorization.
-#opt-level = "z"
-#lto = true
-#panic = "abort"

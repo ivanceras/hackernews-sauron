@@ -10,3 +10,12 @@ members = [
 #mt-dom = { git = "https://github.com/ivanceras/mt-dom.git", branch = "master" }
 #sauron = { git = "https://github.com/ivanceras/sauron.git", branch = "develop" }
 #sauron = { path = "../sauron" }
+
+[profile.release]
+# optimize for binary size
+#opt-level = "s"
+# optimize for binary size, but also turn off loop vectorization.
+opt-level = "z"
+lto = true
+panic = "abort"
+codegen-units = 1
