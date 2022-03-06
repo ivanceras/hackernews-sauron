@@ -10,7 +10,6 @@ license = "MIT"
 [dependencies]
 warp = "0.3"
 client = { path = "../client", default-features = false }
-sauron = { version = "0.43", default-features = false }
 tokio = { version = "1.9", features = ["full"] }
 serde_json = "1.0"
 common = { path = "../common" }

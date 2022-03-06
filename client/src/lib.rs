@@ -2,6 +2,7 @@
 #![deny(unused_extern_crates)]
 pub use app::{App, Msg};
 use sauron::prelude::*;
+pub use sauron;
 
 mod app;
 pub mod util;

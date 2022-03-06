@@ -1,5 +1,6 @@
+use crate::sauron;
+use crate::sauron::prelude::*;
 use client::{App, Msg};
-use sauron::prelude::*;
 
 /// We are creating an index page.
 /// From the `App` supplied, we can derive the view by calling `App.view` function.

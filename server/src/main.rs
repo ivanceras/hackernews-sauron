@@ -1,11 +1,12 @@
 #![deny(warnings)]
 use common::types::StorySorting;
 use client::App;
-use sauron::Render;
+use client::sauron::Render;
 use std::convert::Infallible;
 use std::net::SocketAddr;
 use warp::{http::Response, Filter};
 use common::api;
+pub use client::sauron;
 
 mod page;
 
@@ -138,7 +139,7 @@ async fn main() {
     };
 
     let socket: SocketAddr = ([0, 0, 0, 0], port).into();
-    println!("serving at: {}", socket);
+    println!("serving at: http://{}", socket);
     warp::serve(routes).run(socket).await;
 }
 
