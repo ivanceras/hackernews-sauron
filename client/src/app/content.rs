@@ -18,21 +18,21 @@ impl Content {
         match self {
             Content::Stories(stories) => {
                 node! {
-                    <div key="index-page" class="index-page">
+                    <div class="index-page">
                        {self.view_story_preview_list(stories)}
                     </div>
                 }
             }
             Content::StoryPage(story_page) => {
                 node! {
-                    <div key="story-page" class="story-page">
+                    <div class="story-page">
                         { self.view_story_page(story_page) }
                     </div>
                 }
             }
             Content::UserPage(user_data) => {
                 node! {
-                    <div key="user-details" class="user-details">
+                    <div class="user-details">
                         <h4>{ text!("{}:",user_data.id) }</h4>
                         <p>{ safe_html(&user_data.about) }</p>
                         <span>{ text!("{} karma", user_data.karma) }</span>
@@ -44,7 +44,7 @@ impl Content {
             }
             Content::CommentPermalink(comment) => {
                 node! {
-                    <div key="comment-permalink" class="comment-permalink">
+                    <div class="comment-permalink">
                         {self.view_comment(comment)}
                     </div>
                 }
@@ -54,11 +54,11 @@ impl Content {
 
     fn view_story_preview_list(&self, stories: &[StoryItem]) -> Node<app::Msg> {
         node! {
-            <ol key="story-preview">
+            <ol>
             {
                 for (i, story_preview) in stories.iter().enumerate() {
                     node! {
-                        <li /*key=story_preview.id*/>
+                        <li key=story_preview.id>
                             <div class="item-number">{text!("{}. ",i+1)}</div>
                             {self.view_story_preview(story_preview)}
                         </li>
@@ -79,7 +79,7 @@ impl Content {
         let story_preview_id = story_preview.id;
         let story_preview_by = story_preview.by.clone();
         node! {
-            <div /*key=story_preview_id*/ class="story-preview">
+            <div key=story_preview_id class="story-preview">
                 <div class="buttons">
                     <a>{safe_html("&#9650;")}</a>
                     <a>{safe_html("&#9660;")}</a>
