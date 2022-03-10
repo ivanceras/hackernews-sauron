@@ -3,10 +3,10 @@ use crate::types::{
     Comment, StoryItem, StoryPageData, StorySorting, UserData,
 };
 use futures::future::join_all;
-use lazy_static::lazy_static;
-use lru::LruCache;
-use std::sync::Mutex;
 use thiserror::Error;
+
+#[cfg(feature = "caching")]
+use std::sync::Mutex;
 
 const BASE_URL: &str = "https://hacker-news.firebaseio.com/v0";
 const TOP_STORIES: &str = "/topstories.json";
@@ -19,11 +19,12 @@ const USER_API: &str = "/user";
 const STORIES_COUNT: usize = 20;
 const COMMENT_DEPTH: i64 = 3;
 
-lazy_static! {
-    static ref STORY_CACHE: Mutex<LruCache<i64, StoryPageData>> =
-        Mutex::new(LruCache::new(1000));
-    static ref STORY_PREVIEW_CACHE: Mutex<LruCache<i64, StoryItem>> =
-        Mutex::new(LruCache::new(1000));
+#[cfg(feature = "caching")]
+lazy_static::lazy_static! {
+    static ref STORY_CACHE: Mutex<lru::LruCache<i64, StoryPageData>> =
+        Mutex::new(lru::LruCache::new(1000));
+    static ref STORY_PREVIEW_CACHE: Mutex<lru::LruCache<i64, StoryItem>> =
+        Mutex::new(lru::LruCache::new(1000));
 }
 
 pub async fn get_stories() -> Result<Vec<StoryItem>, ServerError>{
@@ -57,9 +58,11 @@ pub async fn get_stories_with_sorting(
 }
 
 pub async fn get_story(story_id: i64) -> Result<StoryPageData, ServerError> {
+    #[cfg(feature = "caching")]
     if let Some(cached_story) = STORY_CACHE.lock().unwrap().get(&story_id) {
         return Ok(cached_story.clone());
     }
+
     let url = format!("{}{}/{}.json", BASE_URL, ITEM_API, story_id);
     let mut story = make_json_get_request::<StoryPageData>(&url).await?;
     let comment_ids = &story.kids[..story.kids.len().min(3)];
@@ -74,23 +77,31 @@ pub async fn get_story(story_id: i64) -> Result<StoryPageData, ServerError> {
     .collect();
 
     story.comments = comments;
+
+    #[cfg(feature = "caching")]
     STORY_CACHE.lock().unwrap().put(story_id, story.clone());
+
     Ok(story)
 }
 
 // Same as get_story but does not add comments
 pub async fn get_story_preview(story_id: i64) -> Result<StoryItem, ServerError> {
+    #[cfg(feature = "caching")]
     if let Some(cached_story) =
         STORY_PREVIEW_CACHE.lock().unwrap().get(&story_id)
     {
         return Ok(cached_story.clone());
     }
+
     let url = format!("{}{}/{}.json", BASE_URL, ITEM_API, story_id);
     let story_preview = make_json_get_request::<StoryItem>(&url).await?;
+
+    #[cfg(feature = "caching")]
     STORY_PREVIEW_CACHE
         .lock()
         .unwrap()
         .put(story_id, story_preview.clone());
+
     Ok(story_preview)
 }
 
