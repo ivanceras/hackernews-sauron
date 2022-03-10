@@ -138,7 +138,12 @@ async fn main() {
         DEFAULT_PORT
     };
 
+    #[cfg(feature = "use-ipv6")]
+    let socket: SocketAddr = ([0, 0, 0, 0, 0, 0, 0, 1], port).into();
+
+    #[cfg(not(feature = "use-ipv6"))]
     let socket: SocketAddr = ([0, 0, 0, 0], port).into();
+
     println!("serving at: http://{}", socket);
     warp::serve(routes).run(socket).await;
 }
