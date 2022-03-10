@@ -15,5 +15,5 @@ serde_json = "1.0"
 common = { path = "../common" }
 
 [features]
-default = ["use-ipv6"]
+default = []
 use-ipv6 = []
