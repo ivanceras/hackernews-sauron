@@ -49,11 +49,14 @@ pub async fn get_stories_with_sorting(
         .iter()
         .map(|story_id| get_story_preview(*story_id));
 
-    let stories = join_all(story_futures)
+    let mut stories = join_all(story_futures)
         .await
         .into_iter()
         .filter_map(|c| c.ok())
-        .collect();
+        .collect::<Vec<_>>();
+
+    stories.sort_unstable_by(|a,b|a.id.cmp(&b.id));
+
     Ok(stories)
 }
 
