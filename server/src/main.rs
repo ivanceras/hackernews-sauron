@@ -139,7 +139,7 @@ async fn main() {
     };
 
     #[cfg(feature = "use-ipv6")]
-    let socket: SocketAddr = ([0, 0, 0, 0, 0, 0, 0, 1], port).into();
+    let socket: SocketAddr = ([0, 0, 0, 0, 0, 0, 0, 0], port).into();
 
     #[cfg(not(feature = "use-ipv6"))]
     let socket: SocketAddr = ([0, 0, 0, 0], port).into();
