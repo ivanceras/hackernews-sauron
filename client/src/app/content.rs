@@ -79,7 +79,7 @@ impl Content {
         let story_preview_id = story_preview.id;
         let story_preview_by = story_preview.by.clone();
         node! {
-            <div key=story_preview_id class="story-preview">
+            <div class="story-preview">
                 <div class="buttons">
                     <a>{safe_html("&#9650;")}</a>
                     <a>{safe_html("&#9660;")}</a>
