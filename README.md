@@ -38,4 +38,4 @@ Navigate to http://localhost:3030
 ![Screenshot](https://raw.githubusercontent.com/ivanceras/hackernews-sauron/master/client/assets/screenshot-hn-clone.png)
 
 
-[Online demo](https://hackernews-sauron.herokuapp.com)
+[Online demo](http://45.77.22.101/)
