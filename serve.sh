@@ -1,5 +1,7 @@
+#!/bin/bash
+
 set -ev
 
-./build.sh
+. ./build.sh
 
 cargo run --release --bin server
