@@ -17,4 +17,4 @@ common = { path = "../common" }
 [features]
 default = []
 use-ipv6 = []
-use-port80 = []
+use-port-80 = []

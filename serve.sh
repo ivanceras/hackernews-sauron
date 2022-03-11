@@ -4,4 +4,4 @@ set -ev
 
 . ./build.sh
 
-cargo run --release --bin server
+cargo run --release --bin server $@

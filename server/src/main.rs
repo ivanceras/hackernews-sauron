@@ -15,7 +15,7 @@ const PKG_DIR: &str = "client/pkg";
 const FAVICON_FILE: &str = "client/favicon.ico";
 const FAVICON_SVG_FILE: &str = "client/favicon.svg";
 const STYLE_CSS_FILE: &str = "client/style.css";
-#[cfg(not(feature = "use-port80"))]
+#[cfg(not(feature = "use-port-80"))]
 const DEFAULT_PORT: u16 = 3030;
 
 #[tokio::main]
@@ -130,7 +130,7 @@ async fn main() {
             .and(pkg_files.or(favicon).or(favicon_svg).or(style_css)));
 
 
-    #[cfg(not(feature = "use-port80"))]
+    #[cfg(not(feature = "use-port-80"))]
     let port = if let Ok(port) = std::env::var("PORT") {
         if let Ok(port) = port.parse::<u16>() {
             port
@@ -141,7 +141,7 @@ async fn main() {
         DEFAULT_PORT
     };
 
-    #[cfg(feature = "use-port80")]
+    #[cfg(feature = "use-port-80")]
     let port = 80;
 
     #[cfg(feature = "use-ipv6")]
