@@ -141,7 +141,7 @@ pub async fn get_comment(comment_id: i64) -> Result<Comment, ServerError> {
 }
 
 
-pub async fn get_user_page(user_id: &String) -> Result<UserData, ServerError> {
+pub async fn get_user_page(user_id: &str) -> Result<UserData, ServerError> {
     let url = format!("{}{}/{}.json", BASE_URL, USER_API, user_id);
     let mut user = make_json_get_request::<UserData>(&url).await?;
     //submitted could be comments or story post
