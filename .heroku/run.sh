@@ -20,5 +20,8 @@ cargo install wasm-pack
 # build the client project
 wasm-pack build client  --target web --release
 
+# clean updater the client has build to save some space as heroku has a soft limit of 300MB
+cargo clean
+
 # build the server project
 cargo build -p server  --release
