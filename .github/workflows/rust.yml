@@ -16,9 +16,6 @@ jobs:
     - name: Install wasm-pack
       run: cargo install wasm-pack
 
-    - name: Build
-      run: cargo build --all
-
     - name: Run tests
       run: cargo test --all
 
