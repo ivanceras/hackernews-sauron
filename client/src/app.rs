@@ -284,8 +284,11 @@ impl App {
             is_loading: false,
         }
     }
+}
 
-    #[cfg(feature = "wasm")]
+#[cfg(feature = "wasm")]
+impl App{
+
     fn fetch_stories(&self) -> Cmd<Self, Msg> {
         Cmd::new(move|program| {
             let async_fetch = |program:Program<Self,Msg>| async move{
@@ -304,7 +307,6 @@ impl App {
         })
     }
 
-    #[cfg(feature = "wasm")]
     fn fetch_stories_with_sorting(
         &self,
         sorting: StorySorting,
@@ -327,7 +329,6 @@ impl App {
     }
 
 
-    #[cfg(feature = "wasm")]
     fn fetch_story_page(&self, story_id: i64) -> Cmd<Self, Msg> {
         Cmd::new(move|program| {
             let async_fetch = |program:Program<Self,Msg>| async move{
@@ -347,7 +348,6 @@ impl App {
     }
 
 
-    #[cfg(feature = "wasm")]
     fn fetch_comment_permalink(&self, comment_id: i64) -> Cmd<Self, Msg> {
         Cmd::new(move|program| {
             let async_fetch = |program:Program<Self,Msg>| async move{
@@ -367,7 +367,6 @@ impl App {
     }
 
 
-    #[cfg(feature = "wasm")]
     fn fetch_user_page(&self, username: String) -> Cmd<Self, Msg> {
         Cmd::new(move|program| {
             let username = username.clone();
@@ -387,7 +386,6 @@ impl App {
         })
     }
 
-    #[cfg(feature = "wasm")]
     fn push_state_url(url: &str) {
         let history = sauron::window().history().expect("must have history");
         log::trace!("pushing to state: {}", url);
