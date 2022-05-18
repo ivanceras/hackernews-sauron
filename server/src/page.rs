@@ -9,6 +9,7 @@ pub fn index(app: &App) -> Node<Msg> {
     println!("app: {:#?}", app);
     let serialized_state = serde_json::to_string(&app).unwrap();
     node! {
+        <!doctype html>
         <html lang="en">
             <head>
                <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
