@@ -94,36 +94,7 @@ impl Application<Msg> for App {
                         }>
                         <h1>"Hacker News"</h1>
                    </a>
-                   <nav class="story-sort">
-                        <a relative href="/best"
-                            on_click=|e|{
-                            e.prevent_default();
-                            Msg::FetchStoriesSorted(StorySorting::Best)
-                        }>
-                            "best"
-                        </a>
-                        <a relative href="/top"
-                            on_click=|e|{
-                            e.prevent_default();
-                            Msg::FetchStoriesSorted(StorySorting::Top)
-                        }>
-                            "top"
-                        </a>
-                        <a relative href="/new"
-                            on_click=|e|{
-                            e.prevent_default();
-                            Msg::FetchStoriesSorted(StorySorting::New)
-                        }>
-                            "new"
-                        </a>
-                        <a relative href="/show"
-                            on_click=|e|{
-                            e.prevent_default();
-                            Msg::FetchStoriesSorted(StorySorting::Show)
-                        }>
-                            "show"
-                        </a>
-                   </nav>
+                   { self.view_story_sorting() }
                    <nav class="right-nav">
                         <a href="https://github.com/ivanceras/hackernews-sauron">
                            <svg role="img" xmlns="http://www.w3.org/2000/svg">
@@ -234,6 +205,20 @@ impl App {
             }
             FetchStatus::Complete(content) => content.view(),
         }
+    }
+
+    fn view_story_sorting(&self) -> Node<Msg>{
+        nav([class("story-sort")],
+            StorySorting::all().into_iter().map(|sorting|{
+                a([href(format!("/{}",sorting.to_str())),
+                    on_click(move|e|{
+                        e.prevent_default();
+                        Msg::FetchStoriesSorted(sorting)
+                    })],
+                    [text!("{}", sorting.to_str())]
+                 )
+            })
+        )
     }
 
     fn view_loader(&self) -> Node<Msg> {

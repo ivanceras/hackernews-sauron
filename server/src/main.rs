@@ -50,6 +50,7 @@ async fn main() {
         .route("/best", get(best_stories))
         .route("/new", get(new_stories))
         .route("/show", get(show_stories))
+        .route("/ask", get(ask_stories))
         .route("/item/:story_id", get(story_item))
         .route("/user/:username", get(user))
         .route("/comment/:comment_id", get(comment))
@@ -136,6 +137,10 @@ async fn new_stories() -> Response {
 }
 async fn show_stories() -> Response  {
     render_stories(StorySorting::Show).await
+}
+
+async fn ask_stories() -> Response  {
+    render_stories(StorySorting::Ask).await
 }
 
 async fn api_top_stories() -> Response  {

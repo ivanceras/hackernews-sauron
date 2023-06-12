@@ -11,3 +11,5 @@
     - Generate an `index.html` file based on `page` module with no app.
 - [ ] Refactor code for Http fetch_stories.
     - Make a utility to convert futures into `Cmd`.
+- [ ] Make a static database file format, where the app still works on
+    static hosting sites (ie: no database, such as github pages, netlify)
