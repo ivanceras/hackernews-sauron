@@ -51,6 +51,7 @@ async fn main() {
         .route("/new", get(new_stories))
         .route("/show", get(show_stories))
         .route("/ask", get(ask_stories))
+        .route("/job", get(job_stories))
         .route("/item/:story_id", get(story_item))
         .route("/user/:username", get(user))
         .route("/comment/:comment_id", get(comment))
@@ -58,6 +59,8 @@ async fn main() {
         .route("/api/best", get(api_best_stories))
         .route("/api/new", get(api_new_stories))
         .route("/api/show", get(api_show_stories))
+        .route("/api/ask", get(api_ask_stories))
+        .route("/api/job", get(api_job_stories))
         .route("/api/item/:story_id", get(api_story_item))
         .route("/api/comment/:comment_id", get(api_comment_permalink))
         .route("/api/user/:username", get(api_user_page));
@@ -143,6 +146,11 @@ async fn ask_stories() -> Response  {
     render_stories(StorySorting::Ask).await
 }
 
+async fn job_stories() -> Response  {
+    render_stories(StorySorting::Job).await
+}
+
+
 async fn api_top_stories() -> Response  {
     json_stories(StorySorting::Top).await
 }
@@ -154,6 +162,14 @@ async fn api_new_stories() -> Response {
 }
 async fn api_show_stories() -> Response  {
     json_stories(StorySorting::Show).await
+}
+
+async fn api_ask_stories() -> Response  {
+    json_stories(StorySorting::Ask).await
+}
+
+async fn api_job_stories() -> Response  {
+    json_stories(StorySorting::Job).await
 }
 
 async fn story_item(Path(item): Path<i64>) -> Response{

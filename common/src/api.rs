@@ -14,6 +14,7 @@ const NEW_STORIES: &str = "/newstories.json";
 const BEST_STORIES: &str = "/beststories.json";
 const SHOW_STORIES: &str = "/showstories.json";
 const ASK_STORIES: &str = "/askstories.json";
+const JOB_STORIES: &str = "/jobstories.json";
 const ITEM_API: &str = "/item";
 const USER_API: &str = "/user";
 
@@ -41,6 +42,7 @@ pub async fn get_stories_with_sorting(
         StorySorting::New => NEW_STORIES,
         StorySorting::Show => SHOW_STORIES,
         StorySorting::Ask => ASK_STORIES,
+        StorySorting::Job => JOB_STORIES,
     };
 
     let url = format!("{}{}", BASE_URL, stories_api);
