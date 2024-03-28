@@ -31,6 +31,7 @@ pub enum Msg {
     RequestError(ServerError),
     /// the new url
     UrlChanged(String),
+    NoOp,
 }
 
 // App and all its members should be Serializable by serde
@@ -51,19 +52,21 @@ impl Default for App {
     }
 }
 
-impl Application<Msg> for App {
+impl Application for App {
+
+    type MSG = Msg;
 
     #[cfg(feature = "wasm")]
-    fn init(&mut self) -> Cmd<Self, Msg> {
+    fn init(&mut self) -> Cmd<Self> {
         let mut commands = vec![];
-        let listen_to_url_changes = Window::add_event_listeners(vec![on_popstate(|_e| {
+        let listen_to_url_changes = Cmd::from(Window::on_popstate(|_e| {
             log::trace!("pop_state is triggered in sauron add event listener");
             let url = sauron::window()
                 .location()
                 .pathname()
                 .expect("must have get a pathname");
             Msg::UrlChanged(url)
-        })]);
+        }));
 
         commands.push(listen_to_url_changes);
 
@@ -118,12 +121,12 @@ impl Application<Msg> for App {
     }
 
     #[cfg(not(feature = "wasm"))]
-    fn update(&mut self, _msg: Msg) -> Cmd<Self, Msg> {
+    fn update(&mut self, _msg: Msg) -> Cmd<Self> {
         Cmd::none()
     }
 
     #[cfg(feature = "wasm")]
-    fn update(&mut self, msg: Msg) -> Cmd<Self, Msg> {
+    fn update(&mut self, msg: Msg) -> Cmd<Self> {
         match msg {
             Msg::FetchStories => {
                 Self::push_state_url("/");
@@ -155,7 +158,7 @@ impl Application<Msg> for App {
             Msg::ReceivedContent(content) => {
                 self.content = FetchStatus::Complete(content);
                 self.is_loading = false;
-                Window::scroll_to_top()
+                Cmd::from(Window::scroll_to_top(Msg::NoOp))
             }
             Msg::RequestError(server_error) => {
                 self.is_loading = false;
@@ -184,9 +187,10 @@ impl Application<Msg> for App {
 
                 Cmd::batch(vec![
                     cmd,
-                    Window::scroll_to_top(),
+                    Cmd::from(Window::scroll_to_top(Msg::NoOp)),
                 ])
             }
+            Msg::NoOp => Cmd::none(),
         }
     }
 }
@@ -274,9 +278,9 @@ impl App {
 #[cfg(feature = "wasm")]
 impl App{
 
-    fn fetch_stories(&self) -> Cmd<Self, Msg> {
+    fn fetch_stories(&self) -> Cmd<Self> {
         Cmd::new(move|program| {
-            let async_fetch = |program:Program<Self,Msg>| async move{
+            let async_fetch = |mut program:Program<Self>| async move{
                 match api::get_stories().await {
                     Ok(stories) => {
                         program.dispatch(Msg::ReceivedContent( Content::from(
@@ -295,9 +299,9 @@ impl App{
     fn fetch_stories_with_sorting(
         &self,
         sorting: StorySorting,
-    ) -> Cmd<Self, Msg> {
+    ) -> Cmd<Self> {
         Cmd::new(move|program| {
-            let async_fetch = |program:Program<Self,Msg>| async move{
+            let async_fetch = |mut program:Program<Self>| async move{
                 match api::get_stories_with_sorting(sorting).await {
                     Ok(stories) => {
                         program.dispatch(Msg::ReceivedContent( Content::from(
@@ -314,9 +318,9 @@ impl App{
     }
 
 
-    fn fetch_story_page(&self, story_id: i64) -> Cmd<Self, Msg> {
+    fn fetch_story_page(&self, story_id: i64) -> Cmd<Self> {
         Cmd::new(move|program| {
-            let async_fetch = |program:Program<Self,Msg>| async move{
+            let async_fetch = |mut program:Program<Self>| async move{
                 match api::get_story(story_id).await {
                     Ok(story) => {
                         program.dispatch(Msg::ReceivedContent( Content::from(
@@ -333,9 +337,9 @@ impl App{
     }
 
 
-    fn fetch_comment_permalink(&self, comment_id: i64) -> Cmd<Self, Msg> {
+    fn fetch_comment_permalink(&self, comment_id: i64) -> Cmd<Self> {
         Cmd::new(move|program| {
-            let async_fetch = |program:Program<Self,Msg>| async move{
+            let async_fetch = |mut program:Program<Self>| async move{
                 match api::get_comment(comment_id).await {
                     Ok(comment) => {
                         program.dispatch(Msg::ReceivedContent( Content::from(
@@ -352,10 +356,10 @@ impl App{
     }
 
 
-    fn fetch_user_page(&self, username: String) -> Cmd<Self, Msg> {
+    fn fetch_user_page(&self, username: String) -> Cmd<Self> {
         Cmd::new(move|program| {
             let username = username.clone();
-            let async_fetch = move|program:Program<Self,Msg>| async move{
+            let async_fetch = move|mut program:Program<Self>| async move{
                 match api::get_user_page(&username).await {
                     Ok(user_page) => {
                         program.dispatch(Msg::ReceivedContent( Content::from(

@@ -26,5 +26,5 @@ pub async fn main(serialized_state: String) {
             App::default()
         }
     };
-    Program::replace_body(app);
+    Program::replace_mount(app, &sauron::dom::util::body());
 }

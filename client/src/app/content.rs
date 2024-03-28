@@ -2,6 +2,7 @@ use crate::app;
 use common::types::{Comment, StoryItem, StoryPageData, UserData};
 use sauron::prelude::*;
 use serde::{Deserialize, Serialize};
+use sauron::safe_html;
 
 #[derive(
     Debug, Deserialize, Serialize, PartialEq, Clone, derive_more::From,
@@ -81,8 +82,8 @@ impl Content {
         node! {
             <div class="story-preview">
                 <div class="buttons">
-                    <a>{safe_html("&#9650;")}</a>
-                    <a>{safe_html("&#9660;")}</a>
+                    <a>{html::symbol("&#9650;")}</a>
+                    <a>{html::symbol("&#9660;")}</a>
                 </div>
                 <div>
                     <h2>
@@ -125,7 +126,7 @@ impl Content {
                 { self.view_story_preview(&story_page.preview()) }
                 <ul class="comment-component" key="story-comments">
                 {
-                    for comment in &story_page.comments{
+                    for comment in story_page.comments.iter(){
                         self.view_comment(comment)
                     }
                 }

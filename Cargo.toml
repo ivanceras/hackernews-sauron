@@ -9,7 +9,7 @@ members = [
 [patch.crates-io]
 #mt-dom = { git = "https://github.com/ivanceras/mt-dom.git", branch = "master" }
 #sauron = { git = "https://github.com/ivanceras/sauron.git", branch = "develop" }
-#sauron = { path = "../sauron" }
+sauron = { path = "../sauron" }
 
 [profile.release]
 # optimize for binary size

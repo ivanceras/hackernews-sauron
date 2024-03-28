@@ -1,7 +1,6 @@
 #![deny(warnings)]
 use common::types::StorySorting;
 use client::App;
-use client::sauron::Render;
 use std::net::SocketAddr;
 use common::api;
 pub use client::sauron;
