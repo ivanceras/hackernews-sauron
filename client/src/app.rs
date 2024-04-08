@@ -6,8 +6,6 @@ use sauron::prelude::*;
 use serde::{Deserialize, Serialize};
 #[cfg(feature = "wasm")]
 use common::api;
-#[cfg(feature = "wasm")]
-use wasm_bindgen_futures::spawn_local;
 use common::api::ServerError;
 
 mod content;
@@ -57,7 +55,7 @@ impl Application for App {
     type MSG = Msg;
 
     #[cfg(feature = "wasm")]
-    fn init(&mut self) -> Cmd<Self> {
+    fn init(&mut self) -> Cmd<Msg> {
         let mut commands = vec![];
         let listen_to_url_changes = Cmd::from(Window::on_popstate(|_e| {
             log::trace!("pop_state is triggered in sauron add event listener");
@@ -121,12 +119,12 @@ impl Application for App {
     }
 
     #[cfg(not(feature = "wasm"))]
-    fn update(&mut self, _msg: Msg) -> Cmd<Self> {
+    fn update(&mut self, _msg: Msg) -> Cmd<Msg> {
         Cmd::none()
     }
 
     #[cfg(feature = "wasm")]
-    fn update(&mut self, msg: Msg) -> Cmd<Self> {
+    fn update(&mut self, msg: Msg) -> Cmd<Msg> {
         match msg {
             Msg::FetchStories => {
                 Self::push_state_url("/");
@@ -278,100 +276,84 @@ impl App {
 #[cfg(feature = "wasm")]
 impl App{
 
-    fn fetch_stories(&self) -> Cmd<Self> {
-        Cmd::new(move|program| {
-            let async_fetch = |mut program:Program<Self>| async move{
-                match api::get_stories().await {
-                    Ok(stories) => {
-                        program.dispatch(Msg::ReceivedContent( Content::from(
-                            stories,
-                        )));
-                    }
-                    Err(e) => {
-                        program.dispatch(Msg::RequestError(e));
-                    }
+    fn fetch_stories(&self) -> Cmd<Msg> {
+        Cmd::new( async move{
+            match api::get_stories().await {
+                Ok(stories) => {
+                    Msg::ReceivedContent( Content::from(
+                        stories,
+                    ))
                 }
-            };
-           spawn_local(async_fetch(program))
+                Err(e) => {
+                    Msg::RequestError(e)
+                }
+            }
         })
     }
 
     fn fetch_stories_with_sorting(
         &self,
         sorting: StorySorting,
-    ) -> Cmd<Self> {
-        Cmd::new(move|program| {
-            let async_fetch = |mut program:Program<Self>| async move{
-                match api::get_stories_with_sorting(sorting).await {
-                    Ok(stories) => {
-                        program.dispatch(Msg::ReceivedContent( Content::from(
-                            stories,
-                        )));
-                    }
-                    Err(e) => {
-                        program.dispatch(Msg::RequestError(e));
-                    }
+    ) -> Cmd<Msg> {
+        Cmd::new( async move{
+            match api::get_stories_with_sorting(sorting).await {
+                Ok(stories) => {
+                    Msg::ReceivedContent( Content::from(
+                        stories,
+                    ))
                 }
-            };
-           spawn_local(async_fetch(program))
+                Err(e) => {
+                    Msg::RequestError(e)
+                }
+            }
         })
     }
 
 
-    fn fetch_story_page(&self, story_id: i64) -> Cmd<Self> {
-        Cmd::new(move|program| {
-            let async_fetch = |mut program:Program<Self>| async move{
-                match api::get_story(story_id).await {
-                    Ok(story) => {
-                        program.dispatch(Msg::ReceivedContent( Content::from(
-                            story,
-                        )));
-                    }
-                    Err(e) => {
-                        program.dispatch(Msg::RequestError(e));
-                    }
+    fn fetch_story_page(&self, story_id: i64) -> Cmd<Msg> {
+        Cmd::new( async move{
+            match api::get_story(story_id).await {
+                Ok(story) => {
+                    Msg::ReceivedContent( Content::from(
+                        story,
+                    ))
                 }
-            };
-           spawn_local(async_fetch(program))
+                Err(e) => {
+                    Msg::RequestError(e)
+                }
+            }
         })
     }
 
 
-    fn fetch_comment_permalink(&self, comment_id: i64) -> Cmd<Self> {
-        Cmd::new(move|program| {
-            let async_fetch = |mut program:Program<Self>| async move{
-                match api::get_comment(comment_id).await {
-                    Ok(comment) => {
-                        program.dispatch(Msg::ReceivedContent( Content::from(
-                            comment,
-                        )));
-                    }
-                    Err(e) => {
-                        program.dispatch(Msg::RequestError(e));
-                    }
+    fn fetch_comment_permalink(&self, comment_id: i64) -> Cmd<Msg> {
+        Cmd::new( async move{
+            match api::get_comment(comment_id).await {
+                Ok(comment) => {
+                    Msg::ReceivedContent( Content::from(
+                        comment,
+                    ))
                 }
-            };
-           spawn_local(async_fetch(program))
+                Err(e) => {
+                    Msg::RequestError(e)
+                }
+            }
         })
     }
 
 
-    fn fetch_user_page(&self, username: String) -> Cmd<Self> {
-        Cmd::new(move|program| {
-            let username = username.clone();
-            let async_fetch = move|mut program:Program<Self>| async move{
-                match api::get_user_page(&username).await {
-                    Ok(user_page) => {
-                        program.dispatch(Msg::ReceivedContent( Content::from(
-                            user_page,
-                        )));
-                    }
-                    Err(e) => {
-                        program.dispatch(Msg::RequestError(e));
-                    }
+    fn fetch_user_page(&self, username: String) -> Cmd<Msg> {
+        Cmd::new( async move{
+            match api::get_user_page(&username).await {
+                Ok(user_page) => {
+                    Msg::ReceivedContent( Content::from(
+                        user_page,
+                    ))
                 }
-            };
-           spawn_local(async_fetch(program))
+                Err(e) => {
+                    Msg::RequestError(e)
+                }
+            }
         })
     }
 

@@ -11,8 +11,7 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 wasm-bindgen = { version = "0.2.29", optional = true}
 wasm-bindgen-futures = { version = "0.4.1", optional = true }
-#sauron = "0.49.4"
-sauron = { path = "../../sauron", features = ["html-parser"] }
+sauron = { version = "0.61.0", features = ["html-parser"] }
 console_error_panic_hook = { version = "0.1", optional = true}
 log = "0.4"
 console_log = {version ="0.2", features = ["color"], optional = true}
