@@ -2,7 +2,7 @@ use crate::app;
 use common::types::{Comment, StoryItem, StoryPageData, UserData};
 use sauron::prelude::*;
 use serde::{Deserialize, Serialize};
-use sauron::safe_html;
+//use sauron::safe_html;
 
 #[derive(
     Debug, Deserialize, Serialize, PartialEq, Clone, derive_more::From,
@@ -35,7 +35,7 @@ impl Content {
                 node! {
                     <div class="user-details">
                         <h4>{ text!("{}:",user_data.id) }</h4>
-                        <p>{ safe_html(&user_data.about) }</p>
+                        <p>{ raw_html(&user_data.about) }</p>
                         <span>{ text!("{} karma", user_data.karma) }</span>
                         <div class="submissions">
                              {self.view_story_preview_list(&user_data.stories)}
@@ -59,9 +59,11 @@ impl Content {
             {
                 for (i, story_preview) in stories.iter().enumerate() {
                     node! {
-                        <li key=story_preview.id>
+                        <li>
                             <div class="item-number">{text!("{}. ",i+1)}</div>
-                            {self.view_story_preview(story_preview)}
+                            <div class="preview-wrapper">
+                                {self.view_story_preview(story_preview)}
+                            </div>
                         </li>
                     }
                 }
@@ -122,9 +124,9 @@ impl Content {
 
     fn view_story_page(&self, story_page: &StoryPageData) -> Node<app::Msg> {
         node! {
-            <div key=story_page.id>
+            <div>
                 { self.view_story_preview(&story_page.preview()) }
-                <ul class="comment-component" key="story-comments">
+                <ul class="comment-component">
                 {
                     for comment in story_page.comments.iter(){
                         self.view_comment(comment)
@@ -139,7 +141,7 @@ impl Content {
         let comment_id = comment.id;
         let comment_by = comment.by.clone();
         node! {
-            <li key=comment.id class="comment-item">
+            <li class="comment-item">
                 <div class="comment-details">
                     <a href=format!("/user/{}",comment.by)
                         on_click=move|e|{
@@ -154,7 +156,7 @@ impl Content {
                         }>{text!(" {} ago", crate::util::time_ago(comment.time))}
                     </a>
                 </div>
-                <div class="comment">{ safe_html(&comment.text) }</div>
+                <div class="comment">{ raw_html(&comment.text) }</div>
                 <ul class="sub-comments">
                 {
                     for sub in &comment.sub_comments{

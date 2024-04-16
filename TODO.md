@@ -6,10 +6,16 @@
         - Use `window.add_listener('popstate'` to listen to back button and rout to appropriate content.
 - [x] Make the top stories link intercepted with mouse clicks
 - [X] Make comment item become the page content.
-- [ ] Deploy to heroku
-- [ ] Make a pure client-side version for github.io hosting
+- [X] Deploy to heroku
+- [X] Make a pure client-side version for github.io hosting
     - Generate an `index.html` file based on `page` module with no app.
-- [ ] Refactor code for Http fetch_stories.
+- [X] Refactor code for Http fetch_stories.
     - Make a utility to convert futures into `Cmd`.
 - [ ] Make a static database file format, where the app still works on
     static hosting sites (ie: no database, such as github pages, netlify)
+- [ ] when stories are keyed, the patches are not working properly
+    - unable to find the child to be replaced
+    - apparent when clicking from top, then to best, to show
+- [ ] Switching to non-keyed will have a new problem on its own
+    - as the on_click events are not replaced
+    - apparent when clicking on stories in the same item number
