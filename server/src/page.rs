@@ -8,6 +8,7 @@ use client::{App, Msg};
 pub fn index(app: &App) -> Node<Msg> {
     println!("app: {:#?}", app);
     let serialized_state = serde_json::to_string(&app).unwrap();
+    let serialized_state = serialized_state.replace('`', r#"${"`"}"#);
     node! {
         <!doctype html>
         <html lang="en">

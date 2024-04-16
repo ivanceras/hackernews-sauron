@@ -56,25 +56,22 @@ impl Application for App {
 
     #[cfg(feature = "wasm")]
     fn init(&mut self) -> Cmd<Msg> {
-        let mut commands = vec![];
-        let listen_to_url_changes = Cmd::from(Window::on_popstate(|_e| {
-            log::trace!("pop_state is triggered in sauron add event listener");
-            let url = sauron::window()
-                .location()
-                .pathname()
-                .expect("must have get a pathname");
-            Msg::UrlChanged(url)
-        }));
-
-        commands.push(listen_to_url_changes);
-
-        match self.content{
-            FetchStatus::Idle => {
-                commands.push(self.fetch_stories())
-            }
-            _ => (),
-        }
-        Cmd::batch(commands)
+        Cmd::batch([
+            Window::on_popstate(|_e| {
+                log::trace!("pop_state is triggered in sauron add event listener");
+                let url = sauron::window()
+                    .location()
+                    .pathname()
+                    .expect("must have get a pathname");
+                Msg::UrlChanged(url)
+            }),
+            match self.content{
+                FetchStatus::Idle => {
+                    self.fetch_stories()
+                }
+                _ => Cmd::none(),
+            },
+        ])
     }
 
     fn view(&self) -> Node<Msg> {
